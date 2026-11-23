@@ -1,0 +1,10 @@
+[project]
+name = "helsinki-protocolapp"
+version = "0.1.0"
+description = "StainStorm for the Helsinki lab: stains, images, stitches, segments and measures slides."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "arkitekt[all]>=18.5.0",
+    "mikro[xarray]>=14.1.1",
+]

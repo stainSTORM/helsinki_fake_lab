@@ -1,0 +1,19 @@
+[project]
+name = "helsinki-lab"
+version = "0.1.0"
+description = "Serves the Helsinki lab's seven apps together (lab.py); each app is its own project in its folder."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "arkitekt[all]>=18.5.0",
+    "mikro[xarray]>=14.1.1",
+    "numpy",
+    "opencv-python-headless",
+    "scikit-image",
+    "xarray",
+    "zarr",
+]
+
+[tool.ruff.lint]
+extend-select = ["UP"]
+extend-ignore = ["UP037", "UP038", "UP042", "UP040", "UP046", "UP047", "UP049"]

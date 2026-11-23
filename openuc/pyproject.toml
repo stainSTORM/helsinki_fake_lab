@@ -1,0 +1,14 @@
+[project]
+name = "openuc"
+version = "0.1.0"
+description = "openUC2 FRAME microscope: stage, focus, live view and frames into mikro."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "arkitekt[all]>=18.5.0",
+    "mikro[xarray]>=14.1.1",
+    "numpy>=2.5.5",
+    "opencv-python-headless>=5.1.0.95",
+    "xarray>=2026.9.0",
+    "zarr>=3.4.2",
+]

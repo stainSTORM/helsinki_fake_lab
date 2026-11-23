@@ -1,0 +1,9 @@
+[project]
+name = "ot2"
+version = "0.1.0"
+description = "Opentrons OT-2 running staining protocols."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "arkitekt[all]>=18.5.0",
+]
