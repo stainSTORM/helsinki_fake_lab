@@ -516,7 +516,7 @@ FRAME_PANEL = """
       </div>
       <div className="flex items-center gap-2">
         <if when={self.camera.live}>
-          <Badge variant="destructive" icon="radio">live</Badge>
+          <Badge variant="destructive" icon="circle-dot">live</Badge>
         </if>
         <Badge variant={self.stage.acquiring ? "default" : "outline"} icon={self.stage.acquiring ? "camera" : "check"}>{self.stage.acquiring ? "exposing" : "idle"}</Badge>
       </div>
@@ -528,7 +528,7 @@ FRAME_PANEL = """
           <StructureDisplay value={list.first(value: self.camera.streams)} className="absolute inset-0 h-full w-full" emptyText="No stream" />
           <else>
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-muted-foreground">
-              <Icon name="video-off" size={32} />
+              <Icon name="eye-off" size={32} />
               <p className="text-sm">Live off</p>
               <Button size="sm" icon="video" onClick={self.set_live(on: true)}>Start</Button>
             </div>
@@ -579,7 +579,7 @@ FRAME_PANEL = """
             <Button variant="outline" icon="arrow-up" onClick={self.jog(dx_um: 0, dy_um: math.neg(a: val.to_number(value: step) ?? 100))} />
             <div className="flex gap-1.5">
               <Button variant="outline" icon="arrow-left" onClick={self.jog(dx_um: math.neg(a: val.to_number(value: step) ?? 100), dy_um: 0)} />
-              <Button variant="secondary" icon="crosshair" disabled={self.stage.position == "home"} onClick={self.move_to_position(position: "home")} />
+              <Button variant="secondary" icon="home" disabled={self.stage.position == "home"} onClick={self.move_to_position(position: "home")} />
               <Button variant="outline" icon="arrow-right" onClick={self.jog(dx_um: val.to_number(value: step) ?? 100, dy_um: 0)} />
             </div>
             <Button variant="outline" icon="arrow-down" onClick={self.jog(dx_um: 0, dy_um: val.to_number(value: step) ?? 100)} />
@@ -592,12 +592,12 @@ FRAME_PANEL = """
             <span className="font-mono text-xs text-muted-foreground">z {fmt.number(value: self.stage.z, digits: 1)} µm</span>
           </div>
           <div className="flex gap-1.5">
-            <Button size="sm" variant="outline" icon="chevrons-down" className="flex-1" onClick={self.focus(dz_um: -10)}>10</Button>
+            <Button size="sm" variant="outline" icon="arrow-down" className="flex-1" onClick={self.focus(dz_um: -10)}>10</Button>
             <Button size="sm" variant="outline" icon="chevron-down" className="flex-1" onClick={self.focus(dz_um: -1)}>1</Button>
             <Button size="sm" variant="outline" icon="chevron-up" className="flex-1" onClick={self.focus(dz_um: 1)}>1</Button>
-            <Button size="sm" variant="outline" icon="chevrons-up" className="flex-1" onClick={self.focus(dz_um: 10)}>10</Button>
+            <Button size="sm" variant="outline" icon="arrow-up" className="flex-1" onClick={self.focus(dz_um: 10)}>10</Button>
           </div>
-          <Button size="sm" variant="secondary" icon="focus" fullWidth={true} disabled={self.tasks.run_autofocus.running} onClick={self.run_autofocus() into focused}>Autofocus</Button>
+          <Button size="sm" variant="secondary" icon="wand" fullWidth={true} disabled={self.tasks.run_autofocus.running} onClick={self.run_autofocus() into focused}>Autofocus</Button>
           <if when={focused.failed}>
             <Alert variant="destructive" icon="alert-triangle" title="Autofocus failed">{focused.error}</Alert>
           </if>

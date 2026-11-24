@@ -406,7 +406,7 @@ ARM_PANEL = """
       </div>
       <div className="flex items-center gap-2">
         <if when={self.trajectories.gripping}>
-          <Badge variant="outline" icon="grab" className="border-warning/40 bg-warning-soft text-warning">holding</Badge>
+          <Badge variant="outline" icon="box" className="border-warning/40 bg-warning-soft text-warning">holding</Badge>
         </if>
         <Badge variant={self.tasks.run_trajectory.running ? "default" : "outline"} icon={self.tasks.run_trajectory.running ? "loader" : "check"}>{self.tasks.run_trajectory.running ? "moving" : "still"}</Badge>
       </div>
@@ -448,8 +448,8 @@ ARM_PANEL = """
             <span className={self.trajectories.gripping ? "text-xs font-medium text-warning" : "text-xs text-muted-foreground"}>{self.trajectories.gripping ? "closed" : "open"}</span>
           </div>
           <div className="flex gap-1.5">
-            <Button variant={self.trajectories.gripping ? "default" : "outline"} icon="grab" className="flex-1" disabled={self.trajectories.gripping || gripping.running} onClick={self.grip() into gripping}>Grip</Button>
-            <Button variant={self.trajectories.gripping ? "outline" : "default"} icon="hand" className="flex-1" disabled={!self.trajectories.gripping || releasing.running} onClick={self.ungrip() into releasing}>Release</Button>
+            <Button variant={self.trajectories.gripping ? "default" : "outline"} icon="minimize" className="flex-1" disabled={self.trajectories.gripping || gripping.running} onClick={self.grip() into gripping}>Grip</Button>
+            <Button variant={self.trajectories.gripping ? "outline" : "default"} icon="maximize" className="flex-1" disabled={!self.trajectories.gripping || releasing.running} onClick={self.ungrip() into releasing}>Release</Button>
           </div>
         </div>
       </div>
