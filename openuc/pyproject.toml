@@ -5,8 +5,8 @@ description = "openUC2 FRAME microscope: stage, focus, live view and frames into
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "arkitekt[all]>=18.5.0",
-    "mikro[xarray]>=14.1.1",
+    "arkitekt[all]>=18.5.2",
+    "mikro[xarray]>=14.2.0",
     "numpy>=2.5.5",
     "opencv-python-headless>=5.1.0.95",
     "xarray>=2026.9.0",

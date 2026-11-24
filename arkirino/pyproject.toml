@@ -5,5 +5,5 @@ description = "Fairino FR5 robot arm: saved trajectories and a gripper."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "arkitekt[all]>=18.5.0",
+    "arkitekt[all]>=18.5.2",
 ]

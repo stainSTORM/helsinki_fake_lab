@@ -5,8 +5,8 @@ description = "Serves the Helsinki lab's seven apps together (lab.py); each app 
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "arkitekt[all]>=18.5.0",
-    "mikro[xarray]>=14.1.1",
+    "arkitekt[all]>=18.5.2",
+    "mikro[xarray]>=14.2.0",
     "numpy",
     "opencv-python-headless",
     "scikit-image",
