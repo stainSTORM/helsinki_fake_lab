@@ -8,7 +8,7 @@ from skimage.filters import threshold_otsu
 from skimage.measure import regionprops_table
 
 from arkitekt import App, Description, Task
-from mikro import Mikro, mikro_service
+from mikro import Mikro
 from mikro.api.schema import (
     ArrayLens,
     AxisType,
@@ -28,7 +28,6 @@ analyzer_app = App(
     "analyzer",
     "0.1.0",
     description="Measures how much of a slide is stained.",
-    services=[mikro_service],
 )
 
 #: Long names of the cell table's columns.

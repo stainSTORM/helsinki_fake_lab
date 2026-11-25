@@ -5,8 +5,8 @@ description = "Measures how much of a slide is stained."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "arkitekt[all]>=18.5.2",
-    "mikro[xarray]>=14.2.0",
+    "arkitekt[all]>=19.0.0",
+    "mikro[xarray]>=15.0.0",
     "numpy>=2.5.5",
     "scikit-image>=0.26.0",
 ]

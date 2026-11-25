@@ -21,10 +21,10 @@ import zarr
 import koil
 from arkitekt import App, Description, Task
 from kanne.scalars import Unit
-from lovekit import VideoStream, lovekit_service
+from lovekit import VideoStream
 from lovekit.api.schema import Stream
 from lovekit.lovekit import Lovekit
-from mikro import Mikro, dataset_arrays, mikro_service, space_2d
+from mikro import Mikro, dataset_arrays, space_2d
 from mikro.api.schema import ArrayDataset, ArrayLens, CoordinateAnchorInput, Scene
 from mikro.arkitekt.specs import RGBImage
 
@@ -35,7 +35,6 @@ openuc_app = App(
     "openuc",
     "0.1.0",
     description="openUC2 FRAME microscope: stage, focus, live view and frames into mikro.",
-    services=[mikro_service, lovekit_service],
 )
 
 # openUC2 FRAME in metres, Draco-compressed. Reduced from testdata/frame3.glb by

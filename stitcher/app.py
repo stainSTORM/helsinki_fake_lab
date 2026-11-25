@@ -6,7 +6,7 @@ import numpy as np
 import xarray as xr
 
 from arkitekt import App, Description, Task
-from mikro import Mikro, dataset_arrays, mikro_service
+from mikro import Mikro, dataset_arrays
 from mikro.api.schema import AxisType
 from mikro.arkitekt.specs import RGBImage
 
@@ -18,7 +18,6 @@ stitcher_app = App(
     "stitcher",
     "0.1.0",
     description="Stitches image tiles into one mosaic.",
-    services=[mikro_service],
 )
 
 

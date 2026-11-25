@@ -9,7 +9,7 @@ from skimage.filters import threshold_otsu
 from skimage.measure import label
 
 from arkitekt import App, Description, Task
-from mikro import Mikro, mikro_service
+from mikro import Mikro
 from mikro.api.schema import AxisType
 from mikro.arkitekt.specs import LabelMask, RGBImage
 
@@ -22,7 +22,6 @@ starmist_app = App(
     "starmist",
     "0.1.0",
     description="Segments cells in an image.",
-    services=[mikro_service],
 )
 
 

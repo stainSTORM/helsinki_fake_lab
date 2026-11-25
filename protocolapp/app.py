@@ -16,10 +16,9 @@ from typing import Annotated, Protocol
 
 from arkitekt import ActionBlok, App, Description, Task, policy
 from arkitekt.widgets import withStateChoices
-from mikro import mikro_service
 from mikro.api.schema import TableLens
 from mikro.arkitekt.specs import LabelMask, RGBImage
-from rekuest.arkitekt import rekuest_caller_service
+from rekuest.client.client import RekuestCaller
 
 # =========================================================================== #
 # helsinki-protocolapp: StainStorm, composing the six                          #
@@ -36,10 +35,9 @@ lab_app = App(
         "StainStorm for the Helsinki lab: stains, images, stitches, segments and measures "
         "slides, re-staining each until it reaches its target, by composing six other apps."
     ),
-    services=[mikro_service],
 )
 # lab.py --demo starts the run through this app's own client.
-lab_app.service(rekuest_caller_service)
+lab_app.register_client(RekuestCaller)
 
 #: Sample bay: three slots in front of the arm (nodes ``slide_1`` to ``slide_3``). Written
 #: by testing/helsinki_layout.py.
