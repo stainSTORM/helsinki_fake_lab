@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "(python_full_version >= '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.14' and platform_machine == 'x86_64' and platform_python_implementation == 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.14' and platform_machine == 'AMD64' and platform_python_implementation == 'CPython' and sys_platform == 'win32') or (python_full_version >= '3.14' and platform_machine == 'ARM64' and platform_python_implementation == 'CPython' and sys_platform == 'win32') or (python_full_version >= '3.14' and platform_python_implementation == 'CPython' and sys_platform == 'darwin')",
@@ -246,7 +246,7 @@ requires-dist = [{ name = "arkitekt", extras = ["all"], specifier = ">=19.0.0" }
 
 [[package]]
 name = "arkitekt"
-version = "19.0.0"
+version = "19.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -265,9 +265,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "watchfiles" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/79/99/830f2b2e9649421de1e4a860edc29cd343129feaf33b377cf40918b7a2a2/arkitekt-19.0.0.tar.gz", hash = "sha256:e8f13e94de2b49555d8163404ecd889e0af45eb1a544b5c0dcef9cf6ca1a6fb2", size = 225324, upload-time = "2026-11-25T14:53:34.861Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/bb/e11c1d9c2e1619d820bd8918afa5223edb0c731d36849163130caae77d3f/arkitekt-19.0.1.tar.gz", hash = "sha256:a42dcabd8f703f39ba6475070c0492dda068195b2d63645673fe3e069b71d412", size = 225602, upload-time = "2026-11-25T15:40:19.281Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/f0/970d57627a691f87d746968d7bcffe6155dee8a8d39143cb17dd68f6076e/arkitekt-19.0.0-py3-none-any.whl", hash = "sha256:27226a77d74918e5fb16306e6c2ab97cc339c5360125a045e1769da29cd5ddb6", size = 276709, upload-time = "2026-11-25T14:53:33.653Z" },
+    { url = "https://files.pythonhosted.org/packages/60/60/4d1ebfb988bd7af9cefc773b81216d1150c39d55fa734ca8701d9b43b098/arkitekt-19.0.1-py3-none-any.whl", hash = "sha256:9053509d415cd6139cf6a03b23f2d5b76a766d11c608021e6dfcc4925a33ac6f", size = 277001, upload-time = "2026-11-25T15:40:17.971Z" },
 ]
 
 [package.optional-dependencies]
@@ -626,7 +626,7 @@ crypto = [
     { name = "cryptography" },
 ]
 mesh = [
-    { name = "arkitekt-mesh" },
+    { name = "arkitekt-mesh", marker = "(platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux') or (platform_machine == 'x86_64' and platform_python_implementation == 'CPython' and sys_platform == 'linux') or (platform_machine == 'AMD64' and platform_python_implementation == 'CPython' and sys_platform == 'win32') or (platform_machine == 'ARM64' and platform_python_implementation == 'CPython' and sys_platform == 'win32') or (platform_python_implementation == 'CPython' and sys_platform == 'darwin')" },
 ]
 
 [[package]]

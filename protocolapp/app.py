@@ -77,26 +77,39 @@ class StageLike(Protocol):
 
 @lab_app.declare(app="arkirino", auto_resolvable=True, min=1, max=1)
 class ArkirinoLike(Protocol):
-    """A robot arm with saved trajectories and a gripper."""
+    """A robot arm that picks a slide up at a station and sets it down at another, each move
+    out and back: the units the real arm (fairinogale) drives."""
 
     trajectories: TrajectoriesLike
 
-    def run_trajectory(
-        self, name: str, speed: int | None = None, acceleration: int | None = None
+    def pick_up(
+        self,
+        station: str,
+        sample: str = "",
+        speed: int = 20,
+        acceleration: int = 70,
+        danger_speed: int = 10,
     ) -> None:
-        """Run Trajectory"""
+        """Pick Up"""
         ...
 
-    def grip(self) -> None:
-        """Grip"""
+    def release_at(
+        self,
+        station: str,
+        sample: str = "",
+        speed: int = 20,
+        acceleration: int = 70,
+        danger_speed: int = 10,
+    ) -> None:
+        """Release At"""
         ...
 
-    def ungrip(self) -> None:
-        """Ungrip"""
+    def open_grip(self) -> None:
+        """Open Gripper"""
         ...
 
-    def retreat(self, speed: int | None = None) -> None:
-        """Retreat"""
+    def home_robot(self, speed: int = 30, acceleration: int = 30) -> None:
+        """Home Robot"""
         ...
 
 
@@ -695,9 +708,9 @@ PREPARE = """
                 <p className="truncate text-xs text-muted-foreground">at {deps.robot.trajectories.current_position}, {deps.robot.trajectories.gripping ? "holding a slide" : "gripper open"}</p>
               </div>
               <if when={deps.robot.trajectories.gripping}>
-                <Button variant="outline" size="sm" icon="x" disabled={releasing.running} onClick={deps.robot.ungrip() into releasing}>Release</Button>
+                <Button variant="outline" size="sm" icon="x" disabled={releasing.running} onClick={deps.robot.open_grip() into releasing}>Release</Button>
               </if>
-              <Button variant="outline" size="sm" icon="home" disabled={homing.running || deps.robot.trajectories.current_position == "home"} onClick={deps.robot.run_trajectory(name: "home") into homing}>{deps.robot.trajectories.current_position == "home" ? "Home" : "Send home"}</Button>
+              <Button variant="outline" size="sm" icon="home" disabled={homing.running || deps.robot.trajectories.current_position == "home"} onClick={deps.robot.home_robot() into homing}>{deps.robot.trajectories.current_position == "home" ? "Home" : "Send home"}</Button>
             </div>
             <div className="flex items-center gap-3 rounded-xl border bg-background/50 p-2.5">
               <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
@@ -867,18 +880,13 @@ def process_slides(
     opentrons_trajectory: Annotated[
         str,
         withStateChoices("robot.trajectories.available_trajectories"),
-        Description("The trajectory that reaches the liquid handler's deck"),
+        Description("The arm's station at the liquid handler's deck"),
     ] = "opentrons",
     microscope_trajectory: Annotated[
         str,
         withStateChoices("robot.trajectories.available_trajectories"),
-        Description("The trajectory that reaches the microscope's stage"),
+        Description("The arm's station at the microscope's stage"),
     ] = "microscope",
-    home_trajectory: Annotated[
-        str,
-        withStateChoices("robot.trajectories.available_trajectories"),
-        Description("Where the arm parks when all slides are done"),
-    ] = "home",
     tiles: Annotated[int, Description("How many tiles to image per slide")] = 3,
     target_stain: Annotated[
         float,
@@ -960,21 +968,17 @@ def process_slides(
             print(f"[{IDENTIFIER}] {slide.name}: {message}")
 
         # old forms may still send to_opentrons / to_microscope
-        opentrons_trajectory, microscope_trajectory, home_trajectory = (
-            name.removeprefix("to_")
-            for name in (opentrons_trajectory, microscope_trajectory, home_trajectory)
+        opentrons_trajectory, microscope_trajectory = (
+            name.removeprefix("to_") for name in (opentrons_trajectory, microscope_trajectory)
         )
 
         def pick(at: str) -> None:
-            """Go to ``at`` and take the slide there."""
-            robot.run_trajectory(at)
-            robot.grip()
+            """Take the slide at the station ``at``; the arm comes back out with it."""
+            robot.pick_up(at)
 
         def place(at: str) -> None:
-            """Carry the slide in to ``at``, set it down, and back out of the way."""
-            robot.run_trajectory(at)
-            robot.ungrip()
-            robot.retreat()
+            """Set the slide down at the station ``at``; the arm comes back out."""
+            robot.release_at(at)
 
         for index, slide in enumerate(loaded_slides):
             state.slide_progress = 0
@@ -1055,7 +1059,7 @@ def process_slides(
         state.current_slide = ""
         state.phase = "park"
         state.phase_index = len(PHASES)
-        robot.run_trajectory(home_trajectory)
+        robot.home_robot()
         task.progress(100, "Done")
         state.phase = "idle"
         state.phase_index = -1
@@ -1094,7 +1098,7 @@ CONTROL_ROOM = """
           <Button
             icon="play"
             disabled={self.tasks.process_slides.running || demo.running}
-            onClick={self.process_slides(loaded_slides: [{name: "slide A", protocol: "dapi_stain", slot: 1}, {name: "slide B", protocol: "he_stain", slot: 2}], opentrons_trajectory: "opentrons", microscope_trajectory: "microscope", home_trajectory: "home", tiles: 3, target_stain: 0.1, max_rounds: 3) into demo}
+            onClick={self.process_slides(loaded_slides: [{name: "slide A", protocol: "dapi_stain", slot: 1}, {name: "slide B", protocol: "he_stain", slot: 2}], opentrons_trajectory: "opentrons", microscope_trajectory: "microscope", tiles: 3, target_stain: 0.1, max_rounds: 3) into demo}
           >Run the demo slides</Button>
         </Row>
       </CardHeader>
