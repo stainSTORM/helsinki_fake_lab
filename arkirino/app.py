@@ -106,6 +106,13 @@ def run_trajectory(
 
     Moves the arm along a saved named trajectory
     """
+    _drive_in(state, name, speed, acceleration, task)
+
+
+def _drive_in(
+    state: TrajectoryState, name: str, speed: int | None, acceleration: int | None, task: Task
+) -> None:
+    """Back out of where the arm is, then in along trajectory ``name``."""
     if name not in state.available_trajectories:
         raise ValueError(
             f"Unknown trajectory {name!r}. Known: {state.available_trajectories}"
@@ -138,6 +145,11 @@ def retreat(
     Backs the arm out of where it set something down, the way it came, to the clear pose
     in front of that station
     """
+    _back_out(state, speed, task)
+
+
+def _back_out(state: TrajectoryState, speed: int | None, task: Task) -> None:
+    """Back out of the station the arm is in, the way it came."""
     back = _points(state, state.current_position)[: state.waypoint][::-1]
     for index, pose in enumerate(back):
         _travel(state, pose, speed)
@@ -378,6 +390,79 @@ def ungrip(state: TrajectoryState) -> None:
     koil.sleep(0.3)
     state.gripping = False
     print(f"[arkirino] released at {state.current_position}")
+
+
+# The units the real arm (fairinogale) drives, and the protocol app demands: each move goes in to
+# the station, acts on the gripper and comes back out.
+Station = Annotated[
+    str,
+    withStateChoices("self.trajectories.available_trajectories"),
+    Description("The station: a saved trajectory"),
+]
+
+
+@arkirino_app.action
+def pick_up(
+    state: TrajectoryState,
+    station: Station,
+    sample: Annotated[str, Description("Which slot of the station (not simulated)")] = "",
+    speed: Annotated[int, Description("Percent of full speed")] = 20,
+    acceleration: Annotated[int, Description("Percent of full acceleration")] = 70,
+    danger_speed: Annotated[int, Description("Percent at the station (not simulated)")] = 10,
+    *,
+    task: Task,
+) -> None:
+    """Pick Up
+
+    Drives in to the station, grips the slide and comes back out with it
+    """
+    _drive_in(state, station, speed, acceleration, task)
+    koil.sleep(0.3)
+    state.gripping = True
+    _back_out(state, speed, task)
+
+
+@arkirino_app.action
+def release_at(
+    state: TrajectoryState,
+    station: Station,
+    sample: Annotated[str, Description("Which slot of the station (not simulated)")] = "",
+    speed: Annotated[int, Description("Percent of full speed")] = 20,
+    acceleration: Annotated[int, Description("Percent of full acceleration")] = 70,
+    danger_speed: Annotated[int, Description("Percent at the station (not simulated)")] = 10,
+    *,
+    task: Task,
+) -> None:
+    """Release At
+
+    Drives in to the station, sets the slide down and comes back out
+    """
+    _drive_in(state, station, speed, acceleration, task)
+    koil.sleep(0.3)
+    state.gripping = False
+    _back_out(state, speed, task)
+
+
+@arkirino_app.action
+def open_grip(state: TrajectoryState) -> None:
+    """Open Gripper"""
+    koil.sleep(0.3)
+    state.gripping = False
+
+
+@arkirino_app.action
+def home_robot(
+    state: TrajectoryState,
+    speed: Annotated[int, Description("Percent of full speed")] = 30,
+    acceleration: Annotated[int, Description("Percent of full acceleration")] = 30,
+    *,
+    task: Task,
+) -> None:
+    """Home Robot
+
+    Drives to the home pose
+    """
+    _drive_in(state, "home", speed, acceleration, task)
 
 
 #: 3D scene, what a Space draws.

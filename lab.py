@@ -12,6 +12,8 @@ separately: ``cd ~/Code/apps/zellpose && uv run arkitekt run dev``. Without it
 Run:  uv run lab.py            serve all seven (Ctrl-C stops them)
       uv run lab.py --demo     ... and run process_slides once
       uv run lab.py --check    offline: do the demands match the apps?
+      uv run --with requests lab.py --check --real
+                               ... with the real arm and OT-2 from the repos next to this one
       uv run lab.py --force    take over agents a killed run left behind
 
 Each app logs in on its own, so a first run shows seven device-code prompts at once.
@@ -33,6 +35,11 @@ HERE = Path(__file__).resolve().parent
 
 #: zellpose's checkout, next to this repo.
 ZELLPOSE = HERE.parent / "zellpose"
+
+#: The real arm and liquid handler, next to this repo: ``--check --real`` checks them in place of
+#: the simulated ones, under the names the protocol app demands (on the Pi: ``app:`` in their
+#: config.yaml).
+REAL = {"arkirino": HERE.parent / "fairinogale", "ot2": HERE.parent / "OT2windy_service"}
 
 
 def load(folder: Path) -> ModuleType:
@@ -107,13 +114,21 @@ async def main(*, demo: bool, force: bool) -> None:
         await running.wait()
 
 
-def check() -> int:
+def check(real: bool = False) -> int:
     """Compare every demand of the protocol app with the app meant to serve it, offline.
 
     zellpose's App is read from its checkout; declaring it does not import cellpose.
     """
-    zellpose = the_app(load(ZELLPOSE))
-    findings = [f for f in check_apps(*PROVIDERS, zellpose, lab_app) if f.level == "error"]
+    providers = list(PROVIDERS)
+    if ZELLPOSE.exists():  # without the checkout its demand is noted, not compared
+        providers.append(the_app(load(ZELLPOSE)))
+    if real:
+        providers = [p for p in providers if p.identifier not in REAL]
+        for name, folder in REAL.items():
+            device = the_app(load(folder))
+            device.identifier = name
+            providers.append(device)
+    findings = [f for f in check_apps(*providers, lab_app) if f.level == "error"]
     for finding in findings:
         print(finding)
     print("ALL DEMANDS MATCH" if not findings else f"{len(findings)} DEMAND(S) UNMET")
@@ -125,9 +140,10 @@ if __name__ == "__main__":
     parser.add_argument("--demo", action="store_true", help="run process_slides once when everything serves")
     parser.add_argument("--force", action="store_true", help="take over agents a killed run left registered")
     parser.add_argument("--check", action="store_true", help="only compare the demands with the apps, offline")
+    parser.add_argument("--real", action="store_true", help="with --check: the real arm and OT-2 next to this repo")
     options = parser.parse_args()
     if options.check:
-        sys.exit(check())
+        sys.exit(check(options.real))
     try:
         asyncio.run(main(demo=options.demo, force=options.force))
     except KeyboardInterrupt:
